@@ -1,0 +1,70 @@
+﻿<Window x:Class="SignToolTool.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SignToolTool"
+        mc:Ignorable="d"
+        Title="SignToolTool" Height="450" Width="800"
+        LocationChanged="OnLocationChanged">
+    <Grid Margin="5">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="49" />
+            <RowDefinition Height="5" />
+            <RowDefinition Height="49" />
+            <RowDefinition Height="5" />
+            <RowDefinition Height="49" />
+            <RowDefinition Height="5" />
+            <RowDefinition Height="273*" />
+        </Grid.RowDefinitions>
+        <GroupBox Header="SignTool">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="5" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Label Content="Path" ToolTip="The path to signtool.exe" />
+                <DockPanel Grid.Column="2">
+                    <Button DockPanel.Dock="Right" Padding="10, 2" Command="{Binding BrowseToolPathCommand}">...</Button>
+                    <TextBox Margin="0,0,5,0" Text="{Binding ToolPath}" VerticalContentAlignment="Center" />
+                </DockPanel>
+            </Grid>
+        </GroupBox>
+        <GroupBox Grid.Row="2" Header="Signature">
+            <Grid>
+                <DockPanel>
+                    <Button DockPanel.Dock="Right" Padding="10, 2" Command="{Binding BrowseCertificateCommand}">Load from Store</Button>
+                    <Button DockPanel.Dock="Right" Padding="10, 2" Margin="0,0,5,0">Load from File</Button>
+                    <TextBox Margin="0,0,5,0" Text="{Binding Signature}" VerticalContentAlignment="Center" />
+                </DockPanel>
+            </Grid>
+        </GroupBox>
+        <GroupBox Grid.Row="4" Header="Timestamp Authority">
+            <ComboBox IsEditable="True" Text="{Binding TimestampAuthority}" VerticalContentAlignment="Center" ItemsSource="{Binding TimestampAuthorities}"/>
+        </GroupBox>
+        <GroupBox Grid.Row="6" Header="Files to Sign">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Menu>
+                    <MenuItem Header="Add" Command="{Binding AddFileCommand}"></MenuItem>
+                    <MenuItem Header="Remove" Command="{Binding RemoveFileCommand}"
+                              CommandParameter="{Binding ElementName=listFiles, Path=SelectedItem}" />
+                    <MenuItem Header="Sign" Command="{Binding SignCommand}" CommandParameter="{Binding Files}"></MenuItem>
+                    <MenuItem>
+                        <TextBlock>
+                            <Run Text="Task status:" />
+                            <Run Text="{Binding SignCommand.ExecutionTask.Status, Mode=OneWay}" />
+                        </TextBlock>
+                    </MenuItem>
+                </Menu>
+                <DockPanel Grid.Row="2">
+                    <ListBox Name="listFiles" ItemsSource="{Binding Files}"></ListBox>
+                </DockPanel>
+            </Grid>
+        </GroupBox>
+    </Grid>
+</Window>
