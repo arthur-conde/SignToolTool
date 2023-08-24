@@ -22,7 +22,6 @@ namespace SignToolTool
         private string _toolPath = string.Empty;
         private string _signature = string.Empty;
         private string _timestampAuthority = string.Empty;
-        private string _password = string.Empty;
         public event PropertyChangedEventHandler? PropertyChanged;
 
         public string ToolPath      
@@ -58,17 +57,6 @@ namespace SignToolTool
             }
         }
 
-        public string Password
-        {
-            get => _password;
-            set
-            {
-                if (value == _password) return;
-                _password = value;
-                OnPropertyChanged();
-            }
-        }
-
         public ObservableCollection<string> Files { get; }
         public ObservableCollection<string> TimestampAuthorities { get; }
 
@@ -88,12 +76,12 @@ namespace SignToolTool
         public ICommand BrowseCertificateCommand => new RelayCommand(BrowseCertificateCommandExecuted);
         public ICommand AddFileCommand => new RelayCommand(AddFileCommandExecuted);
         public ICommand RemoveFileCommand => new RelayCommand<object>(RemoveFileCommandExecuted, RemoveFileCommandCanExecute);
-        public ICommand SignCommand => new AsyncRelayCommand(SignExecuted);
+        public ICommand SignCommand => new AsyncRelayCommand<SignDto>(SignExecuted);
 
-        private async Task SignExecuted()
+        private async Task SignExecuted(SignDto? data)
         {   
             if (!Files.Any() || string.IsNullOrWhiteSpace(ToolPath) ||
-                string.IsNullOrWhiteSpace(Signature))
+                string.IsNullOrWhiteSpace(Signature) || data == null)
                 return;
             var p = new ProcessStartInfo(ToolPath)
             {
@@ -109,10 +97,10 @@ namespace SignToolTool
                 RedirectStandardOutput = true,
             };
 
-            if (string.IsNullOrWhiteSpace(Password))
+            if (string.IsNullOrWhiteSpace(data.Password))
             {
                 p.ArgumentList.Add("/p");
-                p.ArgumentList.Add(Password);
+                p.ArgumentList.Add(data.Password);
             }
 
             foreach(var path in Files)

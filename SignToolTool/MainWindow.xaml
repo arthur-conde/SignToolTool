@@ -43,7 +43,7 @@
             </Grid>
         </GroupBox>
         <GroupBox Grid.Row="4" Header="Certificate Password">
-            <TextBox Text="{Binding TimestampAuthority}" VerticalContentAlignment="Center" />
+            <PasswordBox Name="certificatePassword" VerticalContentAlignment="Center" />
         </GroupBox>
         <GroupBox Grid.Row="6" Header="Timestamp Authority">
             <ComboBox IsEditable="True" Text="{Binding TimestampAuthority}" VerticalContentAlignment="Center" ItemsSource="{Binding TimestampAuthorities}"/>
@@ -55,10 +55,22 @@
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
                 <Menu>
+                    <Menu.Resources>
+                        <ResourceDictionary>
+                            <local:SignConverter x:Key="signConverter"/>
+                        </ResourceDictionary>
+                    </Menu.Resources>
                     <MenuItem Header="Add" Command="{Binding AddFileCommand}"></MenuItem>
                     <MenuItem Header="Remove" Command="{Binding RemoveFileCommand}"
                               CommandParameter="{Binding ElementName=listFiles, Path=SelectedItem}" />
-                    <MenuItem Header="Sign" Command="{Binding SignCommand}" CommandParameter="{Binding Files}"></MenuItem>
+                    <MenuItem Header="Sign" Command="{Binding SignCommand}">
+                        <MenuItem.CommandParameter>
+                            <MultiBinding Converter="{StaticResource signConverter}">
+                                <Binding ElementName="certificatePassword" Path="Password"/>
+                                <Binding Path="Files"/>
+                            </MultiBinding>
+                        </MenuItem.CommandParameter>
+                    </MenuItem>
                     <MenuItem>
                         <TextBlock>
                             <Run Text="Task status:" />
