@@ -15,6 +15,8 @@
             <RowDefinition Height="5" />
             <RowDefinition Height="49" />
             <RowDefinition Height="5" />
+            <RowDefinition Height="49" />
+            <RowDefinition Height="5" />
             <RowDefinition Height="273*" />
         </Grid.RowDefinitions>
         <GroupBox Header="SignTool">
@@ -31,7 +33,7 @@
                 </DockPanel>
             </Grid>
         </GroupBox>
-        <GroupBox Grid.Row="2" Header="Signature">
+        <GroupBox Grid.Row="2" Header="Certificate">
             <Grid>
                 <DockPanel>
                     <Button DockPanel.Dock="Right" Padding="10, 2" Command="{Binding BrowseCertificateCommand}">Load from Store</Button>
@@ -40,10 +42,13 @@
                 </DockPanel>
             </Grid>
         </GroupBox>
-        <GroupBox Grid.Row="4" Header="Timestamp Authority">
+        <GroupBox Grid.Row="4" Header="Certificate Password">
+            <TextBox Text="{Binding TimestampAuthority}" VerticalContentAlignment="Center" />
+        </GroupBox>
+        <GroupBox Grid.Row="6" Header="Timestamp Authority">
             <ComboBox IsEditable="True" Text="{Binding TimestampAuthority}" VerticalContentAlignment="Center" ItemsSource="{Binding TimestampAuthorities}"/>
         </GroupBox>
-        <GroupBox Grid.Row="6" Header="Files to Sign">
+        <GroupBox Grid.Row="8" Header="Files to Sign">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />

@@ -22,6 +22,7 @@ namespace SignToolTool
         private string _toolPath = string.Empty;
         private string _signature = string.Empty;
         private string _timestampAuthority = string.Empty;
+        private string _password = string.Empty;
         public event PropertyChangedEventHandler? PropertyChanged;
 
         public string ToolPath      
@@ -53,6 +54,17 @@ namespace SignToolTool
             {
                 if (value == _timestampAuthority) return;
                 _timestampAuthority = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string Password
+        {
+            get => _password;
+            set
+            {
+                if (value == _password) return;
+                _password = value;
                 OnPropertyChanged();
             }
         }
@@ -96,6 +108,13 @@ namespace SignToolTool
                 RedirectStandardError = true,
                 RedirectStandardOutput = true,
             };
+
+            if (string.IsNullOrWhiteSpace(Password))
+            {
+                p.ArgumentList.Add("/p");
+                p.ArgumentList.Add(Password);
+            }
+
             foreach(var path in Files)
                 p.ArgumentList.Add(path);
 
